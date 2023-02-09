@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <title>仲恺学生信息</title>
+    <!-- 引入样式 -->
+
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div id="app">
+    <div class="box">
+        <el-table :data="dataList">
+            <el-table-column label="编号" prop="id"></el-table-column>
+            <el-table-column label="姓名" prop="name"></el-table-column>
+            <el-table-column label="性别" prop="sex"></el-table-column>
+            <el-table-column label="考次" prop="round"></el-table-column>
+            <el-table-column label="学历" prop="education"></el-table-column>
+            <el-table-column label="学制" prop="len"></el-table-column>
+            <el-table-column label="入学年份" prop="year"></el-table-column>
+            <el-table-column label="院系" prop="department"></el-table-column>
+            <el-table-column label="专业" prop="major"></el-table-column>
+            <el-table-column label="年级" prop="grade"></el-table-column>
+            <el-table-column label="班级" prop="classes"></el-table-column>
+            <el-table-column label="学号" prop="StudentID"></el-table-column>
+            <el-table-column label="报考科目" prop="subject"></el-table-column>
+            <el-table-column label="准考证号" prop="examID"></el-table-column>
+            <el-table-column label="确认" prop="ensure"></el-table-column>
+        </el-table>
+        <el-pagination
+                class="pagiantion"
+                @current-change="handleCurrentChange"
+                :current-page="pagination.currentPage"
+                :page-size="pagination.pageSize"
+                layout="total, prev, pager, next, jumper"
+                :total="pagination.total">
+        </el-pagination>
+    </div>
+</div>
+
+</body>
+<!-- 引入组件库 -->
+
+<script src="../js/vue.js"></script>
+
+<script src="../plugins/elementui/index.js"></script>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+<script src="../js/axios-0.18.0.js"></script>
+<script>
+    var vue=new vue({
+        el:'#app',
+        data(){
+            return{
+                dataList: [],//当前页要展示的列表数据
+                pagination:{
+                    currentPage: 1,//当前页码
+                    pageSize:8,//每页显示的记录数
+                    total:0,//总记录数
+                    description: ""
+                }
+            }
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.getAll();
+        },
+        methods:{
+            //分页查询
+            async getAll() {
+                // 组织参数，拼接url请求地址
+                await axios.get("/zhku/"+this.pagination.currentPage + "/" + this.pagination.pageSize).then(res => {
+                    // console.log(res.data);
+                    this.pagination.currentPage = res.data.data.current;
+                    this.pagination.pageSize = res.data.data.size;
+                    this.pagination.total = res.data.data.total;
+                    this.dataList = res.data.data.records;
+                });
+            },
+            //切换页码
+            handleCurrentChange(currentPage) {
+                // 修改页码值为当前选中的页码值
+                this.pagination.currentPage = currentPage;
+                // 执行查询
+                this.getAll();
+            },
+        }
+    })
+</script>

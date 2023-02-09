@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+spring:
+  application:
+    name: zhku
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost/zhku?useSSL=false&serverTimezone=UTC&useUnicode=true&characterEncoding=utf8
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: abc123
+  jackson:
+    default-property-inclusion: non_null # JSON处理时忽略非空字段
+mybatis-plus:
+  type-aliases-package: com.hmdp.entity # 别名扫描包
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
